@@ -1,0 +1,64 @@
+import java.util.*;
+
+
+class Node
+{
+	int data;
+	Node left;
+	Node right;
+	
+	public Node(int data)
+	{
+		this.data=data;
+	}
+}
+class QNode implements Comparable<QNode>
+{
+	int val;
+	int data;
+	
+	public QNode(int data,int val)
+	{
+		this.data=data;
+		this.val=val;
+	}
+
+	@Override
+	public int compareTo(QNode o) {
+		return this.val-o.val;
+
+	}
+}
+public class Vot {
+	public static void main(String[] args) {
+		Node root=new Node(10);
+		root.left=new Node(20);
+		root.right=new Node(30);
+		root.left.left=new Node(40);
+		root.left.right=new Node(50);
+		root.right.left=new Node(60);
+		root.right.right=new Node(70);
+		
+		PriorityQueue<QNode> pq=new PriorityQueue<>();
+		int hd=0;
+		print(root,pq,hd);
+		
+		while(!pq.isEmpty())
+		{
+			QNode temp=pq.poll();
+			
+			System.out.println(temp.val+"--->"+temp.data);
+		}
+	}
+
+	private static void print(Node root,PriorityQueue<QNode> pq,int hd) {
+		
+		if(root==null)
+			return;
+		pq.add(new QNode(root.data,hd));
+		print(root.left,pq,hd-1);
+		print(root.right,pq,hd+1);
+		
+	}
+	
+}
