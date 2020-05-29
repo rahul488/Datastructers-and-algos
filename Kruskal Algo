@@ -1,0 +1,86 @@
+import java.util.*;
+
+
+class Node implements Comparable<Node>
+{
+	int ip;
+	int jp;
+	int cost;
+	
+	public Node(int ip,int jp,int cost)
+	{
+		this.ip=ip;
+		this.jp=jp;
+		this.cost=cost;
+	}
+	public int compareTo(Node t)
+	{
+		return this.cost-t.cost;
+	}
+}
+public class Krushkal
+{
+	public static void main(String[] args) 
+	{
+		int x[][]= {{0,2,99,1,99},
+					{2,0,99,99,7},
+					{99,99,0,4,1},
+					{1,99,4,0,99},
+					{99,7,1,99,0}};
+		
+		/* 		0--->1=2
+		 * 		0--->3=1
+		 * 		1--->4=7
+		 * 		2--->4=1
+		 * 		2--->3=4        */
+		
+		int parent[]=new int[x.length];
+		
+		for(int i=0;i<x.length;i++)
+		{
+			parent[i]=i;
+		}
+		
+		PriorityQueue<Node> pq=new PriorityQueue<Node>();
+		Node temp;
+		for(int i=0;i<x.length;i++)
+		{
+			for(int j=0;j<x.length;j++)
+			{
+				if(x[i][j]!=0 && x[j][i]!=99)
+				{
+					temp=new Node(i,j,x[i][j]);
+					pq.add(temp);
+					x[j][i]=0;
+				}
+			}
+		}
+		int sum=0;
+		while(!pq.isEmpty())
+		{
+			Node p=pq.poll();
+			
+			int ip=findParent(parent,p.ip);
+			int jp=findParent(parent,p.jp);
+			
+			if(ip!=jp)
+			{
+				sum+=p.cost;
+				System.out.println(p.ip+"--->"+p.jp+"--->"+p.cost);
+				
+				for(int i=0;i<x.length;i++)
+				{
+					if(jp==parent[i])
+					{
+						parent[i]=ip;
+					}
+				}
+			}
+		}
+		System.out.println("total cost is"+" "+sum);		
+	}
+
+	private static int findParent(int[] parent,int x) {
+		 return parent[x];
+	}
+}
