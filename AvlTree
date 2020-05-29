@@ -1,0 +1,184 @@
+import java.util.*;
+
+
+/*No duplicates allowed*/
+
+class Node
+{
+	int data;
+	Node left;
+	Node right;
+	int height;
+	
+	public Node(int data)
+	{
+		this.data=data;
+		left=null;
+		right=null;
+		height=1;
+	}
+}
+public class Avl {
+	public static void main(String[] args) 
+	{
+		Scanner sc=new Scanner(System.in);
+		/* 50,40,55,30,60,45,20,42,48,41*/
+		Node root=null;
+		int i=1;
+		System.out.println("enter data");
+		while(i <= 10)
+		{
+			root=insert(root,sc.nextInt());
+			i++;
+		}
+		inOrder(root);
+		System.out.println();
+		levelOrder(root);
+	}
+
+	private static void levelOrder(Node root) {
+		int height=heightofBst(root);
+		
+		for(int i=0;i<height;i++)
+		{
+			print(root,i);
+		}
+		
+	}
+
+	private static void print(Node root, int i) {
+		if(root==null)
+			return;
+		if(i==0)
+		{
+			System.out.print(root.data+" ");
+			return ;
+		}
+		print(root.left,i-1);
+		print(root.right,i-1);
+	}
+
+	private static int heightofBst(Node root) {
+		if(root==null)
+			return 0;
+		int lheight=heightofBst(root.left);
+		int rheight=heightofBst(root.right);
+		
+		return (lheight > rheight)?lheight+1:rheight+1;
+	}
+
+	private static void inOrder(Node root) {
+		if(root!=null)
+		{
+		System.out.print(root.data+" ");
+		inOrder(root.left);
+		inOrder(root.right);
+		}
+	}
+
+	private static Node insert(Node root, int data) 
+	{
+		if(root==null)
+		{
+			return new Node(data);
+		}
+		if(data < root.data)
+		{
+			root.left=insert(root.left,data);
+		}
+		else if(data > root.data) 
+		{
+			root.right=insert(root.right,data);
+		}
+		root.height=1+Math.max(height(root.left), height(root.right));
+		
+		int BalanceFactor=getBalanceFactor(root);
+		if(BalanceFactor > 1 && data < root.left.data)
+		{
+			return LLRotation(root);
+		}
+		if(BalanceFactor > 1 && data > root.left.data)
+		{
+			return LRRotation(root);
+		}
+		if(BalanceFactor < -1 && data > root.right.data)
+		{
+			return RRRotation(root);
+		}
+		if(BalanceFactor < -1 && data < root.right.data)
+		{
+			return RLRotation(root);
+		}
+		return root;
+	}
+
+	private static int getBalanceFactor(Node root) {
+		if(root == null)
+			return 0;
+		return height(root.left)-height(root.right);
+	}
+
+	private static int height(Node root) {
+		if(root==null)
+			return 0;
+		
+		return root.height;
+	}
+
+	private static Node RLRotation(Node root) {
+		Node p=root.right;
+		Node q=p.left;
+		
+		p.left=q.right;
+		root.right=q.left;
+		
+		q.left=root;
+		q.right=p;
+		
+		root.height=1+Math.max(height(root.left), height(root.right));
+		p.height=1+Math.max(height(p.left),height(p.right));
+		q.height=1+Math.max(height(q.left),height(q.right));
+		return q;	
+		
+	}
+
+	private static Node RRRotation(Node root) {
+		Node p=root.right;
+		Node q=p.left;
+		
+		p.left=root;
+		root.right=q;
+		
+		root.height=1+Math.max(height(root.left), height(root.right));
+		p.height=1+Math.max(height(p.left), height(p.right));
+		return p;
+	}
+
+	private static Node LRRotation(Node root) {
+		Node p=root.left;
+		Node q=p.right;
+		
+		p.right=q.left;
+		root.left=q.right;
+		
+		q.right=root;
+		q.left=p;
+		
+		root.height=1+Math.max(height(root.left), height(root.right));
+		p.height=1+Math.max(height(p.left),height(p.right));
+		q.height=1+Math.max(height(q.left),height(q.right));
+		return q;
+	}
+
+	private static Node LLRotation(Node root) {
+		Node p=root.left;
+		Node q=p.right;
+		
+		p.right=root;
+		root.left=q;
+		
+		root.height=1+Math.max(height(root.left), height(root.right));
+		p.height=1+Math.max(height(p.left), height(p.right));
+		return p;
+	}
+}
