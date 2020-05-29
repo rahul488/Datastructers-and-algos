@@ -1,0 +1,86 @@
+import java.util.*;
+
+class Graph
+{
+	int vertices;
+	static LinkedList<Integer> adj[];
+
+	@SuppressWarnings("unchecked")
+	public Graph(int vertices)
+	{
+		this.vertices=vertices;
+		adj=new LinkedList[vertices];
+		for(int i=0;i<vertices;i++)
+		{
+			adj[i]=new LinkedList<>();
+		}
+	}
+	public static void addEdge(int a,int b)
+	{
+		adj[a].add(b);
+	}
+
+	public static void Bfs(int source,int v)
+	{
+		Queue<Integer> queue=new LinkedList<>();
+		boolean visited[]=new boolean[v];
+		queue.add(source);
+		visited[source]=true;
+		System.out.println("Bfs is :");
+		while(!queue.isEmpty())
+		{
+			source=queue.poll();
+			System.out.println((char)(source+65));	
+
+			Iterator<Integer> i=adj[source].listIterator();
+
+			while(i.hasNext())
+			{
+				int n=i.next();
+				if(!visited[n])
+				{
+					visited[n]=true;
+					queue.add(n);
+				}
+			}
+		}
+		System.out.println("Dfs is :");
+	}
+	public static void Dfs(int source,int v,boolean visited[])
+	{
+		System.out.println((char)(source+65));
+		
+		visited[source]=true;
+		
+		Iterator<Integer> i=adj[source].listIterator();
+		
+		while(i.hasNext())
+		{
+			int n=i.next();
+			if(!visited[n])
+			{
+				Dfs(n,v,visited);
+			}
+		}
+	}
+}
+class Test
+{
+	public static void main(String[] args) {
+		new Graph(7);
+		Graph.addEdge(0,1);
+		Graph.addEdge(0,2);
+		Graph.addEdge(1,2);
+		Graph.addEdge(2,3);
+		Graph.addEdge(3,4);
+		Graph.addEdge(3,5);
+		Graph.addEdge(2, 5);
+		Graph.addEdge(0, 6);
+
+		Graph.Bfs(0,7);
+		boolean visited[]=new boolean[7];
+		Graph.Dfs(0,7,visited);
+
+	}
+}
+
