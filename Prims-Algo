@@ -1,0 +1,71 @@
+import java.util.*;
+
+public class Prim {
+	static int vertices=7;
+	static int cost=0;
+	public static void main(String[] args) {
+	
+	int x[][]= {{0,2,4,99,99,3,99},
+			    {2,0,99,99,4,99,99},
+			    {4,99,0,2,99,1,99},
+			    {99,99,2,0,3,99,99},
+			    {99,4,99,3,0,99,99},
+			    {3,99,1,99,99,0,99},
+			    {2,99,99,99,99,99,0}};
+	
+		boolean mst[]=new boolean[x.length];
+		int key[]=new int[x.length];
+		int parent[]=new int[x.length];
+		
+		for(int i=0;i<x.length;i++)
+		{
+			key[i]=Integer.MAX_VALUE;
+			mst[i]=false;
+		}
+		key[0]=0;
+		parent[0]=-1;
+		
+		for(int i=0;i<x.length-1;i++)
+		{
+			int u=findMinKey(key,mst);
+			mst[u]=true;
+			
+			for(int j=0;j<x.length;j++)
+			{
+				if(x[u][j]!=0 && mst[j]==false && x[i][j] < key[j] && x[u][j]!=99)
+				{
+					key[j]=x[u][j];
+					parent[j]=u;
+				}
+			}
+		}
+		printMST(parent,x);
+	}
+
+	private static int findMinKey(int[] key, boolean[] mst) {
+		int min=Integer.MAX_VALUE,min_index=-1;
+		
+		for(int i=0;i<vertices;i++)
+		{
+			if(mst[i]==false && key[i]<min)
+			{
+				min=key[i];
+				min_index=i;
+			}
+		}
+		return min_index;
+	}
+	public static void printMST(int parent[], int x[][]) 
+	{ 
+		System.out.println("Edge \tWeight"); 
+		for (int i = 1; i < vertices; i++) 
+		{
+			cost+=x[i][parent[i]];
+			System.out.println(parent[i] + " - " + i + "\t" + x[i][parent[i]]); 
+		}
+		
+		System.out.println("cost is"+" "+cost);
+	} 
+
+
+}
