@@ -1,0 +1,62 @@
+/*
+
+import java.util.*;
+
+class Segment{
+	int dp[];
+
+	public Segment(int n){
+		dp=new int[n];
+	}
+	void buildTree(int ar[],int pos,int strt,int end){
+		 if(strt == end){
+		 	dp[pos]=ar[strt];
+		 	return;
+		 }
+		 int mid=(strt+end)/2;
+		 buildTree(ar,2*pos+1,strt,mid);
+		 buildTree(ar,2*pos+2,mid+1,end);
+		 dp[pos]=dp[2*pos+1]+dp[2*pos+2];
+	}
+	public int query(int node,int strt,int end,int left,int right){
+		if(right < strt || end < left) return 0;
+		if(left <= strt && end <= right){
+			return dp[node];
+		}
+		int mid=(strt+end)/2;
+		return query(2*node+1,strt,mid,left,right)+query(2*node+2,mid+1,end,left,right);
+	}
+	public void update(int ar[],int pos,int idx,int val,int strt,int end){
+
+		if(strt == end){
+			dp[pos]+=val;
+			ar[strt]+=val;
+			return;
+		}
+		int mid=(strt+end)/2;
+		if(strt <= idx && idx <= mid)
+			update(ar,2*pos+1,idx,val,strt,mid);
+			else
+				update(ar,2*pos+2,idx,val,mid+1,end);
+			dp[pos]=dp[2*pos+1]+dp[2*pos+2];
+	}
+}
+class Test{
+	public static void main(String[] args) {
+		int ar[]={1,2,5,6,7,9};
+		int n=ar.length;
+		int height=(int)(Math.log(n)/Math.log(2))+1;
+		int maxSize=(int)Math.pow(2,height+1);
+		Segment tree=new Segment(maxSize);
+		tree.buildTree(ar,0,0,n-1);
+		for(int i=0;i<maxSize;i++)
+		System.out.print(tree.dp[i]+" ");
+		int pos=tree.query(0,0,n-1,0,4);
+		System.out.println();
+		System.out.println(pos);
+		tree.update(ar,0,3,14,0,n-1);
+		System.out.println();
+		for(int i=0;i<maxSize;i++)
+		System.out.print(tree.dp[i]+" ");
+	}
+}
